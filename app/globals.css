@@ -1,26 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Primary Brand Colors */
+  --primary: #3772FF;       /* Main brand blue */
+  --primary-light: #6C9BFF; /* Lighter variant for hover/highlights */
+  --primary-dark: #164BFF;  /* Darker variant for buttons/headers */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Accent / Complementary */
+  --accent: #FF6F37;        /* Complementary orange for CTAs */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+  /* Neutrals */
+  --neutral-light: #F5F7FA; /* Backgrounds, cards */
+  --neutral-dark: #1A1A1A;  /* Text, dark mode elements */
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Optional gradient */
+  --primary-gradient: linear-gradient(135deg, #3772FF, #6C9BFF);
 }
