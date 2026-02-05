@@ -5,7 +5,7 @@ import { FaIdCard, FaClipboardCheck } from "react-icons/fa"
 
 export default function CardSection() {
   return (
-    <section className="bg-[var(--neutral-light)] text-[var(--neutral-dark)] py-20">
+    <section id="card" className="bg-[var(--neutral-light)] text-[var(--neutral-dark)] py-20">
       <div className="max-w-4xl mx-auto px-6 text-center">
         {/* Title */}
         <h2 className="text-3xl md:text-4xl font-extrabold mb-4">

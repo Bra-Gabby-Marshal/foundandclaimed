@@ -23,7 +23,7 @@ const features = [
 
 export default function AboutUs() {
   return (
-    <section className="bg-white text-[var(--neutral-dark)] py-20 relative overflow-hidden">
+    <section id="about-us" className="bg-white text-[var(--neutral-dark)] py-20 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 text-center">
         <h2 className="text-3xl md:text-4xl font-extrabold mb-4">
           About Us

@@ -159,7 +159,7 @@ export default function HomeHero() {
   const selectCard = (index: number) => setCurrentCard(index);
 
   return (
-    <section className="relative bg-[var(--primary-dark)] text-white overflow-hidden">
+    <section id="home" className="relative bg-[var(--primary-dark)] text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 py-28 grid md:grid-cols-2 gap-12 items-center">
         {/* Left Content */}
         <div>
