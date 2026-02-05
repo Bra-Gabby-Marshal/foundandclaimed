@@ -50,14 +50,14 @@ export default function HomeHero() {
 
           <div className="mt-8 flex flex-wrap gap-4">
             <a
-              href="#submit"
-              className="bg-[var(--accent)] hover:bg-[var(--accent-light)] px-8 py-4 rounded-full font-semibold shadow-lg transition transform hover:-translate-y-1"
+              href="/login"
+              className="bg-[var(--accent)] hover:bg-[var(--blueLight)] px-8 py-4 rounded-full font-semibold shadow-lg transition transform hover:-translate-y-1 hover:rounded-full"
             >
               Submit Item
             </a>
             <a
               href="#claim"
-              className="border-2 border-[var(--blueLight)] text-[var(--blueLight)] hover:bg-[var(--blueLight)] hover:text-[var(--primary-dark)] px-8 py-4 rounded-full font-semibold shadow transition transform hover:-translate-y-1"
+              className="border-2 border-[var(--blueLight)] text-[var(--blueLight)] hover:bg-[var(--accent)] px-8 py-4 rounded-full font-semibold shadow transition transform hover:-translate-y-1"
             >
               Claim Item
             </a>
