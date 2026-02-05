@@ -5,16 +5,16 @@
 // import { motion } from "framer-motion"
 
 // const navLinks = [
+//   ["Home", "home"],
 //   ["How it works", "how-it-works"],
+//   ["Services", "actions"],
 //   ["About us", "about-us"],
-//   ["Card", "card"],
-//   ["Parcel", "parcel"],
 // ]
 
 // export default function Navbar() {
 //   const [open, setOpen] = useState(false)
 //   const [hidden, setHidden] = useState(false)
-//   const [activeSection, setActiveSection] = useState("how-it-works")
+//   const [activeSection, setActiveSection] = useState("home")
 
 //   // Hide / show on scroll
 //   useEffect(() => {
@@ -60,7 +60,7 @@
 
 //           {/* Brand */}
 //           <Link
-//             href="/"
+//             href="#home"
 //             className="text-xl sm:text-2xl font-extrabold tracking-tight text-white"
 //           >
 //             Found<span className="text-[var(--accent)]"> & </span>Claimed
@@ -173,11 +173,14 @@
 //   )
 // }
 
+
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
+import useSWR from "swr"
+import api from "@/lib/axios"
 
 const navLinks = [
   ["Home", "home"],
@@ -186,16 +189,27 @@ const navLinks = [
   ["About us", "about-us"],
 ]
 
+// Fetcher for SWR
+const fetcher = async (url: string) => {
+  const token = localStorage.getItem("auth_token")
+  const res = await api.get(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res.data
+}
+
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [hidden, setHidden] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
+  const [profileOpen, setProfileOpen] = useState(false)
+
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   // Hide / show on scroll
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 80) setHidden(true)
-      else setHidden(false)
+      setHidden(window.scrollY > 80)
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
@@ -211,21 +225,35 @@ export default function Navbar() {
       },
       { rootMargin: "-40% 0px -50% 0px", threshold: 0.1 }
     )
-
     navLinks.forEach(([, id]) => {
       const el = document.getElementById(id)
       if (el) observer.observe(el)
     })
-
     return () => observer.disconnect()
   }, [])
 
+  // Close profile dropdown when clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setProfileOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
+  // Fetch user profile
+  const { data: user } = useSWR("/users/me", fetcher)
+
+  const handleLogout = () => {
+    localStorage.removeItem("auth_token")
+    window.location.href = "/"
+  }
+
   return (
     <motion.nav
-      variants={{
-        visible: { y: 0 },
-        hidden: { y: "-100%" },
-      }}
+      variants={{ visible: { y: 0 }, hidden: { y: "-100%" } }}
       animate={hidden ? "hidden" : "visible"}
       transition={{ duration: 0.3, ease: "easeInOut" }}
       className="fixed top-0 inset-x-0 z-50 shadow-lg bg-[var(--primary-dark)]"
@@ -234,10 +262,7 @@ export default function Navbar() {
         <div className="flex h-16 items-center justify-between">
 
           {/* Brand */}
-          <Link
-            href="#home"
-            className="text-xl sm:text-2xl font-extrabold tracking-tight text-white"
-          >
+          <Link href="#home" className="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
             Found<span className="text-[var(--accent)]"> & </span>Claimed
           </Link>
 
@@ -245,25 +270,18 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-10 font-semibold">
             {navLinks.map(([label, id]) => {
               const isActive = activeSection === id
-
               return (
                 <Link
                   key={id}
                   href={`#${id}`}
                   onClick={() => setActiveSection(id)}
-                  className={`
-                    relative uppercase tracking-wide transition-colors duration-300
-                    ${
-                      isActive
-                        ? "text-[var(--accent)]"
-                        : "text-white/85 hover:text-[var(--accent)]"
-                    }
-                    after:absolute after:left-1/2 after:-bottom-2
-                    after:h-[3px] after:-translate-x-1/2
-                    after:bg-[var(--accent)]
-                    after:transition-all after:duration-300
-                    ${isActive ? "after:w-full" : "after:w-0 hover:after:w-full"}
-                  `}
+                  className={`relative uppercase tracking-wide transition-colors duration-300 ${
+                    isActive
+                      ? "text-[var(--accent)]"
+                      : "text-white/85 hover:text-[var(--accent)]"
+                  } after:absolute after:left-1/2 after:-bottom-2 after:h-[3px] after:-translate-x-1/2 after:bg-[var(--accent)] after:transition-all after:duration-300 ${
+                    isActive ? "after:w-full" : "after:w-0 hover:after:w-full"
+                  }`}
                 >
                   {label}
                 </Link>
@@ -271,20 +289,56 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* Desktop CTA */}
-          <div className="hidden md:flex items-center gap-4">
-            <Link
-              href="/login"
-              className="font-semibold text-white/85 hover:text-[var(--accent)] transition"
-            >
-              Login
-            </Link>
-            <Link
-              href="/register"
-              className="bg-[var(--accent)] text-white px-5 py-2 rounded-full font-bold shadow-xl hover:brightness-110 transition"
-            >
-              Get Started
-            </Link>
+          {/* Desktop CTA / Profile */}
+          <div className="hidden md:flex items-center gap-4 relative">
+            {!user ? (
+              <>
+                <Link
+                  href="/login"
+                  className="font-semibold text-white/85 hover:text-[var(--accent)] transition"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="bg-[var(--accent)] text-white px-5 py-2 rounded-full font-bold shadow-xl hover:brightness-110 transition"
+                >
+                  Get Started
+                </Link>
+              </>
+            ) : (
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-full transition"
+                >
+                  <img
+                    src={user.avatar || "/default-avatar.png"}
+                    alt="Profile"
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                  <span className="text-white font-semibold">{user.first_name}</span>
+                </button>
+
+                {profileOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg overflow-hidden z-50">
+                    <Link
+                      href="/dashboard"
+                      className="block px-4 py-3 hover:bg-gray-100 text-gray-800 font-medium"
+                      onClick={() => setProfileOpen(false)}
+                    >
+                      My Dashboard
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-3 hover:bg-gray-100 text-gray-800 font-medium"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Mobile Toggle */}
@@ -328,23 +382,39 @@ export default function Navbar() {
             </Link>
           ))}
 
-          <div className="pt-4 flex flex-col gap-3">
-            <Link
-              href="/login"
-              className="text-center py-2 rounded-full border border-white/30 text-white/90 hover:text-[var(--accent)] transition"
-            >
-              Login
-            </Link>
-            <Link
-              href="/register"
-              className="text-center bg-[var(--accent)] py-2 rounded-full font-bold hover:brightness-110 transition"
-            >
-              Get Started
-            </Link>
-          </div>
+          {!user ? (
+            <div className="pt-4 flex flex-col gap-3">
+              <Link
+                href="/login"
+                className="text-center py-2 rounded-full border border-white/30 text-white/90 hover:text-[var(--accent)] transition"
+              >
+                Login
+              </Link>
+              <Link
+                href="/register"
+                className="text-center bg-[var(--accent)] py-2 rounded-full font-bold hover:brightness-110 transition"
+              >
+                Get Started
+              </Link>
+            </div>
+          ) : (
+            <div className="pt-4 flex flex-col gap-3">
+              <Link
+                href="/dashboard"
+                className="text-center py-2 rounded-full border border-white/30 text-white/90 hover:text-[var(--accent)] transition"
+              >
+                My Dashboard
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="text-center bg-[var(--accent)] py-2 rounded-full font-bold hover:brightness-110 transition"
+              >
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </motion.div>
     </motion.nav>
   )
 }
-
