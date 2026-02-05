@@ -1,3 +1,5 @@
+import AboutUs from "@/components/AboutUs";
+import CardSection from "@/components/CardSection";
 import Footer from "@/components/Footer";
 import HomeHero from "@/components/HomeHero";
 import HowItWorks from "@/components/HowItWorks";
@@ -10,6 +12,8 @@ export default function Home() {
         <Navbar />
         <HomeHero />
         <HowItWorks />
+        <CardSection />
+        <AboutUs />
         <Footer />
       </main>
   );
