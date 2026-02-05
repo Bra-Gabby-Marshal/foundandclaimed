@@ -35,6 +35,7 @@ export default function CardSection() {
                 bg-[var(--accent)] 
                 px-6 py-3 
                 rounded-full 
+                text-white
                 font-semibold 
                 shadow-lg 
                 transition 
@@ -54,7 +55,7 @@ export default function CardSection() {
                 shadow 
                 transition 
                 transform hover:-translate-y-1
-                hover:bg-[var(--accent)] hover:text-[var(--primary-dark)]
+                hover:bg-[var(--accent)] hover:text-white
               "
             >
               Claim an ID
