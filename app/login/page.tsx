@@ -2,6 +2,7 @@
 
 import React, { useState, ChangeEvent, FormEvent } from "react"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
+import Link from "next/link"
 
 interface LoginForm {
   username: string
@@ -89,12 +90,12 @@ export default function LoginPage() {
 
           {/* Forgot password */}
           <div className="text-right">
-            <a
+            <Link
               href="/forgot-password"
               className="text-sm text-[var(--accent)] hover:underline"
             >
               Forgot password?
-            </a>
+            </Link>
           </div>
 
           {/* Submit */}
@@ -106,6 +107,17 @@ export default function LoginPage() {
             {isSubmitting ? "Logging in..." : "Login"}
           </button>
         </form>
+
+        {/* Sign Up */}
+        <p className="text-center mt-6 text-sm text-gray-600">
+          Don’t have an account?{" "}
+          <Link
+            href="/register"
+            className="text-[var(--accent)] font-semibold hover:underline"
+          >
+            Sign Up
+          </Link>
+        </p>
       </div>
 
       <style jsx>{`
