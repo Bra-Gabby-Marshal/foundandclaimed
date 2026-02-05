@@ -94,8 +94,8 @@ export default function ActionsSection() {
         "Submit or claim IDs efficiently with secure tracking at verified collection points.",
       icon: <FaIdCard size={48} className="text-[var(--accent)]" />,
       buttons: [
-        { label: "Submit a Found ID", href: "#submit-id", primary: true },
-        { label: "Claim an ID", href: "#claim-id", primary: false },
+        { label: "Submit a Found ID", href: "/login", primary: true },
+        { label: "Claim an ID", href: "/login", primary: false },
       ],
     },
     {
@@ -104,8 +104,8 @@ export default function ActionsSection() {
         "Send, submit, or claim parcels, bags, and documents with secure tracking and safe collection points.",
       icon: <FaBoxOpen size={48} className="text-[var(--blueLight)]" />,
       buttons: [
-        { label: "Send a Parcel", href: "#submit-parcel", primary: true },
-        { label: "Claim a Parcel", href: "#claim-parcel", primary: false },
+        { label: "Send a Parcel", href: "/login", primary: true },
+        { label: "Claim a Parcel", href: "/login", primary: false },
       ],
     },
   ]

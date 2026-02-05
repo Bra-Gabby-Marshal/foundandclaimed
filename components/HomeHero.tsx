@@ -179,7 +179,7 @@ export default function HomeHero() {
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Submit Buttons */}
             <a
-              href="#submit-id"
+              href="/login"
               className="
                 bg-[var(--accent)] 
                 px-8 py-4 
@@ -196,7 +196,7 @@ export default function HomeHero() {
             </a>
 
             <a
-              href="#submit-parcel"
+              href="/login"
               className="
                 bg-[var(--accent)] 
                 px-8 py-4 
@@ -214,7 +214,7 @@ export default function HomeHero() {
 
             {/* Claim Buttons */}
             <a
-              href="#claim-id"
+              href="/login"
               className="
                 border-2 border-[var(--blueLight)] 
                 text-[var(--blueLight)] 
@@ -233,7 +233,7 @@ export default function HomeHero() {
             </a>
 
             <a
-              href="#claim-parcel"
+              href="/login"
               className="
                 border-2 border-[var(--blueLight)] 
                 text-[var(--blueLight)] 
